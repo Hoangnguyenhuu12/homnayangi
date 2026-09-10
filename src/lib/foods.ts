@@ -1,7 +1,22 @@
 import { priceRarity } from './case-mechanics';
-export type Food={customId?:string;name:string;sub:string;price:number;rarity:number;image:number;veg?:boolean;quip:string};
-// Approximate lunch portion prices in thousands of VND, not restaurant quotes.
-export const foods:Food[]=[
+import type { MealType, FoodCategory } from './i18n';
+import { drinks } from './drinks';
+
+export type Food = {
+  customId?: string;
+  name: string;
+  sub: string;
+  price: number;
+  rarity: number;
+  image: number;
+  veg?: boolean;
+  quip: string;
+  meals?: MealType[];
+  category?: FoodCategory;
+};
+
+// Approximate portion prices in thousands of VND, calibrated with author's base and delivery estimates.
+const rawFoods: Omit<Food, 'rarity'>[] = [
   {
     "name": "Cơm tấm",
     "sub": "Sườn bì chả • Việt Nam",
@@ -974,5 +989,133 @@ export const foods:Food[]=[
   "sub": "Thịt & rau • Việt Nam",
   "quip": "Miến này không phải miếng mồi deadline.",
   "image": 131
+},
+{
+  "name": "Xôi ngọt",
+  "sub": "Bắp, gấc, đậu xanh • Việt Nam",
+  "price": 20,
+  "image": 200,
+  "quip": "Ngọt ngào êm dịu, nạp năng lượng buổi sáng.",
+  "meals": ["breakfast", "afternoon"]
+},
+{
+  "name": "Bánh bao",
+  "sub": "Thịt trứng cút • Việt Nam",
+  "price": 25,
+  "image": 201,
+  "quip": "Cầm tay tiện lợi, lót dạ tức thì.",
+  "meals": ["breakfast", "afternoon", "latenight"]
+},
+{
+  "name": "Bánh giò",
+  "sub": "Thịt mộc nhĩ • Việt Nam",
+  "price": 25,
+  "image": 202,
+  "quip": "Mềm mịn ấm bụng, ăn kèm chả lụa bao ngon.",
+  "meals": ["breakfast", "afternoon"]
+},
+{
+  "name": "Bột chiên",
+  "sub": "Trứng & đu đủ • Việt Nam",
+  "price": 35,
+  "image": 203,
+  "quip": "Giòn rụm bên ngoài, bùi béo bên trong.",
+  "meals": ["breakfast", "afternoon", "latenight"]
+},
+{
+  "name": "Bánh canh cá lóc",
+  "sub": "Cá lóc đồng & sợi bánh canh dai • Miền Trung",
+  "price": 45,
+  "image": 204,
+  "quip": "Nước dùng ngọt thanh đậm đà, ấm lòng chắc dạ.",
+  "meals": ["breakfast", "lunch", "dinner", "latenight"]
+},
+{
+  "name": "Súp cua",
+  "sub": "Trứng cút & nấm • Việt Nam",
+  "price": 35,
+  "image": 205,
+  "quip": "Súp nóng sánh mịn, ấm bụng ngày gió.",
+  "meals": ["breakfast", "afternoon", "latenight"]
+},
+{
+  "name": "Bánh tráng nướng",
+  "sub": "Trứng & tép • Việt Nam",
+  "price": 30,
+  "image": 206,
+  "quip": "Pizza kiểu Việt Nam, giòn tan nức mũi.",
+  "meals": ["afternoon", "latenight"]
+},
+{
+  "name": "Há cảo",
+  "sub": "Hấp & chiên • Dim sum",
+  "price": 40,
+  "image": 207,
+  "quip": "Vỏ mỏng nhân đầy, chấm xì dầu giấm tiệt cú mèo.",
+  "meals": ["breakfast", "afternoon", "dinner"]
+},
+{
+  "name": "Phở xào bò",
+  "sub": "Thịt bò & cải ngọt áp chảo • Hà Nội",
+  "price": 55,
+  "image": 208,
+  "quip": "Bánh phở thơm lừng mùi khói, thịt bò mềm ngọt ngập tràn.",
+  "meals": ["lunch", "dinner", "latenight"]
+},
+{
+  "name": "Ốc",
+  "sub": "Luộc, xào bơ tỏi • Việt Nam",
+  "price": 75,
+  "image": 209,
+  "quip": "Kèo tụ tập số một sau giờ tan ca.",
+  "meals": ["afternoon", "dinner", "latenight"]
+},
+{
+  "name": "Chân gà",
+  "sub": "Nướng & sả tắc • Việt Nam",
+  "price": 55,
+  "image": 210,
+  "quip": "Giòn sần sật cay tê, nhâm nhi hết nấc.",
+  "meals": ["afternoon", "dinner", "latenight"]
+},
+{
+  "name": "Bánh bèo",
+  "sub": "Tôm chấy & tóp mỡ • Huế",
+  "price": 35,
+  "image": 211,
+  "quip": "Mềm mịn dẻo thơm, chan nước mắm ngọt cay đậm đà.",
+  "meals": ["breakfast", "afternoon", "dinner"]
 }
-].map(food=>({...food,rarity:priceRarity(food.price)}));
+];
+
+function inferMeals(f: { name: string; sub?: string; meals?: MealType[]; category?: FoodCategory }): MealType[] {
+  if (f.meals && f.meals.length > 0) return f.meals;
+  const text = (f.name + ' ' + (f.sub || '')).toLowerCase();
+
+  const isBreakfast = /bánh mì|phở|hủ tiếu|bún bò|bún chả|bánh cuốn|cháo|xôi|chảo|nui xào|bánh canh|dim sum|kebab|sandwich|cơm tấm|bột chiên|bánh bao|bánh giò|súp cua|miến|há cảo|cà phê|bạc xỉu|sữa đậu nành/i.test(text);
+  const isLunch = !/lẩu cá|lẩu bò|bbq|bít tết|sushi cá hồi|ốc|chân gà/i.test(text);
+  const isAfternoon = /bánh mì|bột chiên|bánh bao|bánh giò|bánh tráng|gỏi cuốn|súp cua|há cảo|bánh xèo|nem nướng|gà rán|kebab|sandwich|burger|xôi|khoai tây|ốc|chân gà|trà sữa|trà đào|trà trái cây|đá xay|sinh tố|nước ép|cà phê/i.test(text);
+  const isDinner = /lẩu|nướng|bbq|bít tết|steak|sushi|pizza|cơm|bún đậu|bò né|bò lúc lắc|cá hồi|mì cay|mì ý|pasta|ramen|udon|cơm niêu|mì xào|cơm rang|ốc|chân gà|phở bò|bánh canh|sườn|gà rán|trà sữa|sinh tố|đá xay/i.test(text);
+  const isLateNight = /cháo|hủ tiếu|phở|mì xào|mì cay|bánh mì|ốc|chân gà|lẩu|bánh bao|xôi|súp cua|bột chiên|trà tắc|nước mía|sữa đậu nành|trà sữa/i.test(text);
+
+  const res: MealType[] = [];
+  if (isBreakfast) res.push('breakfast');
+  if (isLunch) res.push('lunch');
+  if (isAfternoon) res.push('afternoon');
+  if (isDinner) res.push('dinner');
+  if (isLateNight) res.push('latenight');
+
+  return res.length > 0 ? res : ['lunch', 'dinner'];
+}
+
+export { drinks } from './drinks';
+
+export const foods: Food[] = [
+  ...rawFoods.map(food => ({
+    ...food,
+    category: (food.category || 'food') as FoodCategory,
+    meals: inferMeals(food),
+    rarity: priceRarity(food.price)
+  })),
+  ...drinks
+];
