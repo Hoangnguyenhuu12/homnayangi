@@ -174,6 +174,9 @@ html{scrollbar-gutter:stable}.reel-window{overflow:clip}.reel-track{transform:tr
 .header-actions{display:flex;align-items:center;gap:8px}.language-button{height:36px;min-width:38px;padding:0 9px;border:1px solid #ffffff2b;background:#1d2932b8;color:#d8dde1;font-size:12px;font-weight:700;letter-spacing:.8px}.language-button:hover{background:#2b3a45;border-color:#ffffff4a}.github-button{height:36px;display:flex;align-items:center;gap:8px;padding:0 10px;color:#d8dde1;text-decoration:none;border:1px solid #ffffff2b;background:#1d2932b8;font-size:13px}.github-button:hover{background:#2b3a45;border-color:#ffffff4a}.github-mark{width:18px;height:18px;flex:none}.github-stars{height:20px;display:flex;align-items:center;gap:4px;padding-left:8px;border-left:1px solid #ffffff28;color:#dec989;font-variant-numeric:tabular-nums}.github-stars svg{flex:none}@media(max-width:640px){.header-actions{gap:0}.language-button{min-width:34px;padding:0 6px;border:0;background:none}.github-button{padding:0 6px;border:0;background:none}.github-label{display:none}.github-stars{padding-left:5px}.sound-button{padding:10px 6px}}
 /* Account UI is mounted on demand; the reel keeps its existing compositor path. */
 .preferences-button{display:flex;align-items:center;gap:7px;min-height:36px;padding:0 10px;border:1px solid #ffffff2b;background:#1d2932b8;color:#d8dde1;font-size:13px}.preferences-dialog[data-slot=dialog-content]{width:min(660px,calc(100vw - 24px));max-width:660px;max-height:92dvh;display:flex;flex-direction:column;gap:12px;background:#24323e;color:#e3e5e7;border:1px solid #ffffff30;padding:24px;overflow:auto}.preferences-dialog h2{font-size:23px}.preferences-dialog input:not([type=checkbox]){border:1px solid #ffffff30;background:#17232d;color:#fff;padding:10px;width:100%;font-size:16px;border-radius:3px}.preferences-dialog input[type=checkbox]{width:18px;height:18px;accent-color:#91b66b;flex-shrink:0}.preferences-toolbar,.pool-tabs,.pool-save,.preferences-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px}.preferences-toolbar{font-size:13px;border-bottom:1px solid #ffffff20;padding:10px 0}.preferences-toolbar button,.preferences-toolbar a,.pool-primary{display:flex;align-items:center;justify-content:center;gap:6px}.pool-tabs{justify-content:start}.pool-tabs button{padding:9px 12px;border-bottom:2px solid transparent;font-size:14px}.pool-tabs .selected{border-color:#dec989;color:#dec989}.pool-body{min-height:0}.pool-body fieldset{border:0;margin:0;padding:0;min-width:0}.pool-list{max-height:36dvh;overflow:auto;margin-top:10px;overscroll-behavior:contain}.pool-row{display:flex;gap:12px;align-items:center;min-height:48px;padding:9px 3px;border-bottom:1px solid #ffffff14;font-size:14px}.pool-row>span,.pool-row>button:first-child{flex:1;text-align:left;overflow-wrap:anywhere}.pool-row small{margin-left:auto;white-space:nowrap;color:#b7c3cc}.pool-primary{background:#648c43;border:1px solid #a4bf8266;padding:10px 16px;color:white;min-height:42px}.pool-save{padding-top:12px;border-top:1px solid #ffffff28}.pool-save small{color:#b7c3cc}.custom-form{display:grid;grid-template-columns:1fr 140px;gap:12px}.custom-form label{font-size:12px;color:#bac6cf}.custom-form input{margin-top:5px}.custom-form .inline-check{display:flex;align-items:center;gap:8px}.custom-form .inline-check input{margin:0}.subtle-button,.preferences-bottom{font-size:12px;color:#b6c2ca;padding-top:10px}.preferences-message{color:#e8cf96;font-size:13px;margin:0}.delete-confirm{background:#5a303066;padding:12px;font-size:13px}.delete-confirm button{padding:8px;background:#8c3a3a;margin-top:8px}.custom-food-art{display:grid;place-items:center;color:#dec989;background:radial-gradient(ellipse,#dec98915,transparent)}@media(max-width:640px){.preferences-button{padding:0 6px;border:0;background:none}.preferences-button span{display:none}.preferences-dialog[data-slot=dialog-content]{padding:20px 16px}.custom-form{grid-template-columns:1fr 110px}header{gap:6px}.preferences-toolbar{flex-wrap:wrap}.pool-row{min-height:48px}}
+.pool-category-filter{display:flex;gap:6px;margin:8px 0 2px}.pool-category-chip{padding:4px 11px;font-size:12px;font-weight:500;background:#17232d;color:#9bb0be;border:1px solid #ffffff24;border-radius:4px;cursor:pointer;transition:all .15s ease}.pool-category-chip:hover{background:#223340;color:#fff;border-color:#ffffff45}.pool-category-chip.active{background:#dec98920;border-color:#dec98990;color:#dec989}.pool-type-tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;margin-left:6px;font-weight:500}.pool-type-tag.drink{background:#39648c33;color:#79b8ff;border:1px solid #79b8ff33}.pool-type-tag.food{background:#8c6a3933;color:#eac366;border:1px solid #eac36633}.category-toggle-group{display:flex;gap:8px;margin-top:6px}.category-toggle-btn{flex:1;padding:7px 10px;font-size:13px;font-weight:500;background:#17232d;color:#9bb0be;border:1px solid #ffffff30;border-radius:4px;cursor:pointer;transition:all .15s ease}.category-toggle-btn:hover{background:#223340;color:#fff}.category-toggle-btn.active{background:#dec98925;border-color:#dec989;color:#dec989;font-weight:600}
+
+
 
 .inventory-title-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.customize-food-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 12px;border:1px solid #ffffff30;border-radius:6px;background:#ffffff06;color:#d6d9df;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}.customize-food-button:hover{background:#ffffff10;border-color:#ffffff55}.customize-food-button:focus-visible{outline:2px solid #e4b85c;outline-offset:3px}.customize-food-button:disabled{opacity:.45;cursor:default}.customize-short{display:none}@media(max-width:600px){.inventory-title-row{gap:10px;justify-content:space-between}.inventory .section-heading>div:first-child{width:100%}.customize-food-button{min-height:44px;padding:8px 10px}.customize-full{display:none}.customize-short{display:inline}}
 
@@ -188,5 +191,102 @@ html{scrollbar-gutter:stable}.reel-window{overflow:clip}.reel-track{transform:tr
 }
 @media (max-width: 640px) {
   .brand-logo { width: 40px; height: 40px; }
+}
+
+/* Interactive Meal Title Dropdown */
+.meal-selector-container {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.meal-selector-trigger {
+  font: inherit;
+  color: #e5a823;
+  background: none;
+  border: none;
+  border-bottom: 2px solid rgba(229, 168, 35, 0.75);
+  padding: 0 4px 2px 4px;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  line-height: inherit;
+}
+
+.meal-selector-trigger:hover {
+  transform: scale(1.06);
+  color: #ffd269;
+  border-bottom-color: #ffd269;
+}
+
+.meal-selector-trigger:focus-visible {
+  outline: 2px solid #e5a823;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.meal-selector-trigger:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.meal-selector-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #14181f;
+  border: 1px solid #2b333e;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
+  min-width: 140px;
+  padding: 6px 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: mealDropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes mealDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.meal-selector-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #a6b0be;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  user-select: none;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.meal-selector-item:hover {
+  background: #222933;
+  color: #ffffff;
+}
+
+.meal-selector-item.is-active {
+  color: #e5a823;
+  font-weight: 600;
+}
+
+.meal-item-check {
+  font-size: 13px;
+  color: #e5a823;
+  margin-left: 12px;
 }
 
