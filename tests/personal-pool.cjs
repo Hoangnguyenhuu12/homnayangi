@@ -7,5 +7,8 @@ const out=mkdtempSync(join(tmpdir(),'pool-test-'));try{
  const catalog=personalFoods(emptyProfile());for(const target of [30,50,100,180])assert.ok(Math.abs(personalSelector(catalog,target).expectedPrice-target)<1e-8);
  const pair=[{...items[0],price:10},{...items[0],price:500}];for(const target of [30,50,150,180]){const sel=personalSelector(pair,target);assert.ok(Math.abs(sel.expectedPrice-target)<1e-8);for(let i=0;i<100;i++)assert.ok(pair.includes(sel.choose(pair)))}
  assert.equal(personalSelector(pair,1).expectedPrice,10);assert.equal(personalSelector(pair,999).expectedPrice,500);
- console.log('PASS: empty, single-item, removed IDs, price boundaries, feasible mean and personalized selection.');
+ const pDrink=validateProfile({disabled:[],custom:[{id:crypto.randomUUID(),name:'Trà tắc 10k',price:10,veg:true,category:'drink'}],revision:0});
+ const dItem=personalFoods(pDrink).find(f=>f.name==='Trà tắc 10k');
+ assert.equal(dItem?.category,'drink');assert.equal(dItem?.sub,'Nước của tôi');
+ console.log('PASS: empty, single-item, removed IDs, price boundaries, feasible mean, drink custom items and personalized selection.');
 }finally{rmSync(out,{recursive:true,force:true})}

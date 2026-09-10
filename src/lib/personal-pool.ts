@@ -1,6 +1,7 @@
 import { foods, type Food } from './foods';
 import { createFoodSelector, priceRarity } from './case-mechanics';
-export type CustomFood = { id: string; name: string; price: number; veg: boolean };
+import type { FoodCategory } from './i18n';
+export type CustomFood = { id: string; name: string; price: number; veg: boolean; category?: FoodCategory };
 export type PoolProfile = { disabled: number[]; custom: CustomFood[]; revision: number };
 export const emptyProfile = (): PoolProfile => ({ disabled: [], custom: [], revision: 0 });
 const ids = new Set(foods.map(f => f.image));
@@ -12,14 +13,27 @@ export function validateProfile(input: unknown): PoolProfile {
  const custom = p.custom.map((item: unknown): CustomFood => {
   if (!item || typeof item!=='object') throw new Error('Invalid dish');
   const f=item as Record<string,unknown>;
-  if(Object.keys(f).some(k=>!['id','name','price','veg'].includes(k)) || typeof f.id!=='string' || !/^[0-9a-f-]{36}$/i.test(f.id) || typeof f.name!=='string' || !f.name.trim() || f.name.length>60 || /[\x00-\x1f\x7f]/.test(f.name) || !Number.isInteger(f.price) || (f.price as number)<10 || (f.price as number)>500 || typeof f.veg!=='boolean') throw new Error('Invalid dish');
-  return {id:f.id,name:f.name.trim().normalize('NFC'),price:f.price as number,veg:f.veg};
+  if(Object.keys(f).some(k=>!['id','name','price','veg','category'].includes(k)) || typeof f.id!=='string' || !/^[0-9a-f-]{36}$/i.test(f.id) || typeof f.name!=='string' || !f.name.trim() || f.name.length>60 || /[\x00-\x1f\x7f]/.test(f.name) || !Number.isInteger(f.price) || (f.price as number)<10 || (f.price as number)>500 || typeof f.veg!=='boolean' || (f.category !== undefined && f.category !== 'food' && f.category !== 'drink')) throw new Error('Invalid dish');
+  const res: CustomFood = {id:f.id,name:f.name.trim().normalize('NFC'),price:f.price as number,veg:f.veg};
+  if (f.category === 'drink') res.category = 'drink';
+  return res;
  });
  if(new Set(custom.map(f=>f.id)).size!==custom.length || foods.length-p.disabled.length+custom.length<1) throw new Error('Keep at least one dish');
  return {disabled:p.disabled as number[],custom,revision:p.revision as number};
 }
 export function personalFoods(profile: PoolProfile): Food[] {
- return [...foods.filter(f=>!profile.disabled.includes(f.image)), ...profile.custom.map(f=>({...f,customId:f.id,image:-1,sub:'Món của tôi',quip:'',rarity:priceRarity(f.price)}))];
+ return [
+  ...foods.filter(f=>!profile.disabled.includes(f.image)),
+  ...profile.custom.map(f=>({
+    ...f,
+    customId:f.id,
+    image:-1,
+    sub: f.category === 'drink' ? 'Nước của tôi' : 'Món của tôi',
+    quip:'',
+    category: f.category || 'food',
+    rarity:priceRarity(f.price)
+  }))
+ ];
 }
 export function personalSelector(population: Food[], target: number) {
  if(!population.length) return null;
