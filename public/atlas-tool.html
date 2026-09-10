@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS:GO Food & Drink Sprite Atlas Maker</title>
+  <style>
+    :root {
+      --bg: #101113;
+      --card-bg: #17181b;
+      --border: #2e3036;
+      --accent: #d2f65b;
+      --amber: #dfc681;
+      --text: #f3f3ef;
+      --muted: #83877b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 30px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 25px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 25px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #b4b7ae;
+    }
+    select, button {
+      background: #202227;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    select:focus, button:focus {
+      outline: 2px solid var(--accent);
+    }
+    .btn-export {
+      background: var(--accent);
+      color: #101113;
+      font-weight: 700;
+      border: 1px solid #edffa9;
+      margin-left: auto;
+      padding: 10px 22px;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .btn-export:hover {
+      background: #e3ff8a;
+      transform: translateY(-1px);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .slot-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      min-height: 220px;
+    }
+    .slot-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .slot-title {
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .drop-zone {
+      width: 140px;
+      height: 140px;
+      border: 2px dashed #3c3f46;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      background: #141518;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+    }
+    .drop-zone img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .drop-zone span {
+      font-size: 11px;
+      color: #6d7067;
+      text-align: center;
+      padding: 6px;
+    }
+    .drop-zone input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .guide-box {
+      background: #15181a;
+      border-left: 3px solid var(--amber);
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #b9bcc3;
+      border-radius: 0 4px 4px 0;
+      line-height: 1.7;
+    }
+    .guide-box code {
+      background: #23272d;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--accent);
+      font-family: monospace;
+    }
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CS:GO Food & Drink Sprite Atlas Maker</h1>
+      <p class="subtitle">Công cụ tạo file WebP Sprite Atlas (1448 x 1086 px) chuẩn CS:GO để gắn ảnh cho món ăn và nước uống.</p>
+    </header>
+
+    <div class="controls">
+      <label for="preset-select">Chọn bộ Atlas cần tạo:</label>
+      <select id="preset-select">
+        <option value="drinks-0">drinks-0.webp (Nước uống 300 – 311: Trà Đài Loan, Cà phê, Nước mía...)</option>
+        <option value="drinks-1">drinks-1.webp (Nước uống 312 – 323: Trà sữa Ô Long, Lài, Nướng, Bạc xỉu...)</option>
+        <option value="drinks-2">drinks-2.webp (Nước uống 324 – 335: Trà đào, Trà xoài, Dương chi cam lộ...)</option>
+        <option value="drinks-3">drinks-3.webp (Nước uống 336 – 347: Sinh tố, Sữa tươi trân châu, Starbucks...)</option>
+        <option value="food-new-0">food-new-0.webp (Món ăn mới 200 – 211: Xôi ngọt, Bánh bao, Bánh giò, Ốc...)</option>
+      </select>
+
+      <button id="btn-export" class="btn-export">Tải xuống file WebP</button>
+    </div>
+
+    <div id="slots-grid" class="grid"></div>
+
+    <div class="guide-box">
+      <strong>Hướng dẫn nhanh:</strong><br>
+      1. Chọn bộ Atlas tương ứng từ dropdown phía trên.<br>
+      2. Kéo thả hoặc click chọn hình ảnh vào 12 ô (mỗi ô tương ứng 1 món). Bạn có thể để trống các ô chưa có ảnh.<br>
+      3. Nhấn <code>Tải xuống file WebP</code> để lưu file (ví dụ <code>drinks-0.webp</code>).<br>
+      4. Copy file vừa tải vào thư mục <code>public/</code> của dự án.<br>
+      5. Mở file <code>src/app/page.tsx</code>, thêm tên file vào danh sách <code>AVAILABLE_ATLASES</code> (ví dụ: thêm <code>'drinks-0'</code>) để kích hoạt ảnh trên giao diện!
+    </div>
+
+    <canvas id="atlas-canvas" width="1448" height="1086"></canvas>
+  </div>
+
+  <script>
+    const PRESETS = {
+      'drinks-0': [
+        { id: 300, name: 'Hồng trà Đài Loan' },
+        { id: 301, name: 'Nước mía' },
+        { id: 302, name: 'Cà phê đen đá' },
+        { id: 303, name: 'Trà tắc khổng lồ' },
+        { id: 304, name: 'Rau má đậu xanh' },
+        { id: 305, name: 'Trà Ô Long Mộc Hương' },
+        { id: 306, name: 'Trà xanh hoa nhài' },
+        { id: 307, name: 'Trà bí đao' },
+        { id: 308, name: 'Hồng trà chanh' },
+        { id: 309, name: 'Trà sữa Đài Loan' },
+        { id: 310, name: 'Cà phê sữa đá' },
+        { id: 311, name: 'Hồng trà kem tươi' },
+      ],
+      'drinks-1': [
+        { id: 312, name: 'Trà sữa Ô Long' },
+        { id: 313, name: 'Trà sữa Lài' },
+        { id: 314, name: 'Trà sữa Bí đao' },
+        { id: 315, name: 'Trà sữa Vải thiều' },
+        { id: 316, name: 'Bạc xỉu' },
+        { id: 317, name: 'Cà phê muối' },
+        { id: 318, name: 'Trà chanh giã tay' },
+        { id: 319, name: 'Sữa chua đánh đá' },
+        { id: 320, name: 'Trà sữa trân châu đường đen' },
+        { id: 321, name: 'Trà sữa nướng' },
+        { id: 322, name: 'Hồng trà Latte' },
+        { id: 323, name: 'Trà sữa Socola' },
+      ],
+      'drinks-2': [
+        { id: 324, name: 'Trà Ô Long Đào' },
+        { id: 325, name: 'Trà Ô Long Vải' },
+        { id: 326, name: 'Trà dâu tằm' },
+        { id: 327, name: 'Nước ép cam tươi' },
+        { id: 328, name: 'Trà Ô Long Xoài' },
+        { id: 329, name: 'Trà ổi hồng' },
+        { id: 330, name: 'Ô Long Latte' },
+        { id: 331, name: 'Trà mãng cầu' },
+        { id: 332, name: 'Trà xanh Matcha Latte' },
+        { id: 333, name: 'Dương Chi Cam Lộ' },
+        { id: 334, name: 'Trà đào cam sả' },
+        { id: 335, name: 'Cà phê cốt dừa' },
+      ],
+      'drinks-3': [
+        { id: 336, name: 'Sinh tố bơ' },
+        { id: 337, name: 'Sinh tố mãng cầu' },
+        { id: 338, name: 'Cold Brew cam sả' },
+        { id: 339, name: 'Matcha đá xay' },
+        { id: 340, name: 'Sữa tươi trân châu đường đen' },
+        { id: 341, name: 'Ô Long Nhài Sữa (Phê La)' },
+        { id: 342, name: 'Freeze Trà Xanh (Highlands)' },
+        { id: 343, name: 'Trà sữa chôm chôm (Katinat)' },
+        { id: 344, name: 'Caramel Macchiato (Starbucks)' },
+        { id: 345, name: 'Frappuccino (Starbucks)' },
+        { id: 346, name: 'Trà Ô Long sữa (Phúc Long)' },
+        { id: 347, name: 'Trà sữa Alisan (Gong Cha)' },
+      ],
+      'food-new-0': [
+        { id: 200, name: 'Xôi ngọt' },
+        { id: 201, name: 'Bánh bao' },
+        { id: 202, name: 'Bánh giò' },
+        { id: 203, name: 'Bột chiên' },
+        { id: 204, name: 'Bánh canh cá lóc' },
+        { id: 205, name: 'Súp cua' },
+        { id: 206, name: 'Bánh tráng nướng' },
+        { id: 207, name: 'Há cảo' },
+        { id: 208, name: 'Phở xào bò' },
+        { id: 209, name: 'Ốc' },
+        { id: 210, name: 'Chân gà' },
+        { id: 211, name: 'Bánh bèo' },
+      ]
+    };
+
+    const loadedImages = {};
+
+    function renderSlots(presetKey) {
+      const items = PRESETS[presetKey];
+      const grid = document.getElementById('slots-grid');
+      grid.innerHTML = '';
+
+      items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'slot-card';
+
+        const row = Math.floor(index / 4) + 1;
+        const col = (index % 4) + 1;
+
+        card.innerHTML = `
+          <div class="slot-header">
+            <span>Ô #${index} (Hàng ${row}, Cột ${col})</span>
+            <span>ID: ${item.id}</span>
+          </div>
+          <div class="slot-title">${item.name}</div>
+          <div class="drop-zone" id="zone-${index}">
+            <input type="file" accept="image/*" data-index="${index}">
+            <span id="label-${index}">Kéo thả hoặc click chọn ảnh</span>
+          </div>
+        `;
+        grid.appendChild(card);
+
+        const input = card.querySelector('input');
+        const zone = card.querySelector('.drop-zone');
+
+        input.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFile(e.target.files[0], index, zone);
+          }
+        });
+
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.classList.add('dragover');
+        });
+        zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleFile(e.dataTransfer.files[0], index, zone);
+          }
+        });
+      });
+    }
+
+    function handleFile(file, index, zone) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedImages[index] = img;
+          zone.innerHTML = `<img src="${event.target.result}" alt="preview">`;
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function exportAtlas() {
+      const presetKey = document.getElementById('preset-select').value;
+      const canvas = document.getElementById('atlas-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Kích thước chuẩn tác giả gốc: 1448 x 1086 (4 cột x 3 hàng, mỗi ô 362 x 362)
+      ctx.clearRect(0, 0, 1448, 1086);
+
+      const cellW = 1448 / 4; // 362
+      const cellH = 1086 / 3; // 362
+
+      for (let i = 0; i < 12; i++) {
+        const col = i % 4;
+        const row = Math.floor(i / 4);
+        const x = col * cellW;
+        const y = row * cellH;
+
+        if (loadedImages[i]) {
+          const img = loadedImages[i];
+          // Vẽ ảnh dạng center crop (cover)
+          const scale = Math.max(cellW / img.width, cellH / img.height);
+          const scaledW = img.width * scale;
+          const scaledH = img.height * scale;
+          const offsetX = x + (cellW - scaledW) / 2;
+          const offsetY = y + (cellH - scaledH) / 2;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, cellW, cellH);
+          ctx.clip();
+          ctx.drawImage(img, offsetX, offsetY, scaledW, scaledH);
+          ctx.restore();
+        } else {
+          // Ô trống: nền xám đen nhẹ
+          ctx.fillStyle = '#17191d';
+          ctx.fillRect(x, y, cellW, cellH);
+        }
+      }
+
+      // Xuất file WebP
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Không thể tạo file WebP!');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${presetKey}.webp`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 'image/webp', 0.9);
+    }
+
+    const select = document.getElementById('preset-select');
+    select.addEventListener('change', (e) => {
+      // Xóa cache ảnh đã tải cho preset trước
+      for (let key in loadedImages) delete loadedImages[key];
+      renderSlots(e.target.value);
+    });
+
+    document.getElementById('btn-export').addEventListener('click', exportAtlas);
+
+    // Khởi tạo ban đầu
+    renderSlots('drinks-0');
+  </script>
+</body>
+</html>
